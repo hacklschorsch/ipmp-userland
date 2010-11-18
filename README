@@ -1,0 +1,107 @@
+ipmp_ping, ipmp_pathchar:
+Userland tools for querying IPMP-enabled routers.
+
+
+
+    General info
+    """"""""""""
+
+Both of these tools generate IPMP echo requests, to be passed on
+through your network and collect IPMP Path Records on their way. And
+be changed into replies. And come back. For this to work, your
+routers have to support IPMP.  See Matthew Luckie's thesis below or
+have a look at my IPMP element for the Click Modular Router software
+framework:
+
+http://github.com/hacklschorsch/click-packages/tree/ipmp
+
+If you don't already know about Click, I strongly suggest to have
+a look at it, it's a great piece of software; But running it only
+for IPMP is maybe a tad overkill.
+
+Most of this work is (c) Matthew Luckie and Anthony McGregor.
+I (Florian Sesser, TUM) merely made both of the tools work for
+recent Linux distributions in the course of my thesis (to help me
+compare routing protocols in WLAN meshes). 
+
+For information on IPMP, see Matthew Luckie's excellent thesis at
+http://www.wand.net.nz/~mluckie/pubs/mluckie-thesis.pdf .
+
+
+
+    Usage
+    """""
+
+I merely fixed the #ifdef path that was of concern for my platform;
+Maybe you need to fix the source some more if you do not use
+Linux 2.6.
+
+IMPORTANT: See the command line below. Both utilities only work for
+me using the -4 and -R switches and when specifying a size for the
+packets (-s ...).
+
+
+
+    Examples
+    """"""""
+
+Here is some example output from the ipmp_ping tool, host 10.20.1.9
+IPMP pinging 10.20.5.9. The right-most number is the flow counter;
+The last hop (4->5) lost one probe. Second-most to the right is the
+time stamp in µs precision. (IPMP supports nanosecond precision,
+but our router platform does not). As you can see, this link is
+asymmetric, having only two hops on its reverse path.
+
+# ipmp_ping -4 -R  -s 1200 10.20.05.09 -t 1 -c 1000
+---------------------------------------------------------------
+[...]
+> * 0   127.0.0.1  Oct  8 16:14:11 2010 367233000 0
+>   1  10.20.4.33  Oct  8 16:14:11 2010 370650000 7
+>   2   10.20.4.9  Oct  8 16:14:11 2010 372399000 7
+> * 3   10.20.5.9  Oct  8 16:14:11 2010 373934000 7
+>   4  10.20.4.33  Oct  8 16:14:11 2010 375663000 7
+> * 5   10.20.1.9  Oct  8 16:14:11 2010 378716000 6
+> forward path = 3 hops, reverse path = 2 hops
+> rtt: 11ms
+[...] 
+---------------------------------------------------------------
+
+
+This is sample output from the ipmp_pathchar tool, which uses IPMP
+and a PacketPair technique to infer link bandwidth. Unfortunately,
+this technique does not work well on wireless (especially multi-hop)
+networks, for various reasons.
+(Actually, ipmp_pathchar uses screen and is interactive. This is
+a textual screenshot, if you will.)
+
+# ipmp_pathchar  -4 -R -s 1200 10.20.05.09
+---------------------------------------------------------------
+> ipmp_pathchar 10.20.05.09: minsize 108, maxsize 1200, tx/rx
+> 144/129, paths 1     127.0.0.1 -> 10.20.4.33 : 2394 kbps [min 437
+> max 7131]
+> 10.20.4.33 ->  10.20.4.9 : 5560 kbps [min 4927 max 140903]
+>  10.20.4.9 ->  10.20.5.9 : 9972 kbps [min 859 max 30545]
+>  10.20.5.9 -> 10.20.4.33 : 2532 kbps [min 985 max 22285]
+> 10.20.4.33 ->  10.20.1.9 : 6938 kbps [min 2591 max 26234] 
+---------------------------------------------------------------
+
+
+
+    Copyright
+    """""""""
+
+I publish my additions and/or changes under the respective
+licenses of the original work, to avoid trouble and because I
+do not care much. In this case, it is BSD. See the source files
+for more information.
+
+
+    Greetings
+    """""""""
+
+All the best to Matthew Luckie, who provided me this code and
+tirelessly answered my stupid questions.
+
+Finally, I'd be glad if any of this is useful to you!
+
+Florian Sesser <sesser@in.tum.de> 2010
