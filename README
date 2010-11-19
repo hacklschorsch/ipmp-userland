@@ -71,7 +71,7 @@ This is sample output from the ipmp_pathchar tool, which uses IPMP
 and a PacketPair technique to infer link bandwidth. Unfortunately,
 this technique does not work well on wireless (especially multi-hop)
 networks, for various reasons.
-(Actually, ipmp_pathchar uses screen and is interactive. This is
+(Actually, ipmp_pathchar uses ncurses and is interactive. This is
 a textual screenshot, if you will.)
 
 # ipmp_pathchar  -4 -R -s 1200 10.20.05.09
